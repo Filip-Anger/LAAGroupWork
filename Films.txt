@@ -1,0 +1,24 @@
+A)
+First we selected 8 films from various generas which we have all watched. We picked one person to predict - Demir, the rest of the group are the other "raters". The goal is to predict Demir's ratings of films 5 to 8, while only using Demir's ratings on films 1 to 4. 
+
+B)
+Step 1: Prepare matrix for prediction based on angles.
+The goal is to compare 4 dimensional Demir's vector with 4 dimensional vectors (of films 1 to 4) of others. Original scale was 0 to 10, to make the vectorst most informative, we centere each vector around the origin (sum of every vector is 0). 
+
+D) 
+We want to determine how simular is Demir to others based on the angle. We compare the angle between Demir's vector and vectors of the other raters (individually). We normalize the sum of angles between Demir and every other rater. Now the normalized vectors (call them weights) tell us how simular is Demir's taste to taste of every other rater - we calculate Demir's predicting rating of each film by multiplying each row (coresponding to one film) by the weights. Eg: Film 1 = 0.2*V1 + 0.4*V2 + 0.1*V3 + 0.3*V4.
+
+$\alpha = acos(dot(Demir, Other) / norm(Demir) * norm(Other)$ 
+
+The results:
+Predicting the training values:
+Original: 7   Predicted:8	Mean absolute error = 1
+	  8		8
+	 10		8
+	  8		7
+
+Predicting unknown valuies: 
+Original:9   Predicted: 9	Mean absolute error = 0.5
+	 8		8		
+	 8		8
+	 9		7
