@@ -121,18 +121,46 @@ R = [   7.0	9	7	8	10;
         -1	6	6	8	8;  ]
 # Dimir full vector
 d = [7 8 10 8 9 8 8 9]
-av = sum(d[1:4]) / 4
+d_actual = d[5:8]
+av = sum(R[:, 2:5]) / (4*8)
 # R_origin = R .- (transpose(ones(8)) * R) / 8
 R[5:8, 1] = ones(4) * av
+# WE WANT TO PREDICT USERS!!!
+R = transpose(R)
 R
-# R_origin
-# Rows - films
-# Column - users
-U, S, V = svd(R)
-# U 8x5 > FILMS
+# Rows - users
+# Column - films
+# U 5x5 > Users consist of 5 features
 # S 5 sig values
-# V 5x5 > USERS, demir is V[:, 1]
+# V 5x8 > films consist of 5 features
+# V - take full rows
+# U -take full cols
+U, S, V = svd(R)
 
-for i in 1:8
-    println(dot(U[i,:], transpose(V[1, :])) * S[1])
+for i in 1:4
+    i = 5 - i
+    println("RANK ", i)
+    S = S[1:i];
+    U = U[:, 1:i];
+    V = V[:,1:i];
+    U * transpose(V)
+    R4 = transpose(U * (Matrix(I,i, i) .* S) * transpose(V))
+    d_predict = R4[5:8, 1]
+    show(round.(d_predict, digits=2))
+    mar = round(norm(d_predict .- d_actual,1) / 4, digits=2)
+    print("AMR: ", mar)
+    println()
+    println("---------------")
 end
+
+show(stdout, "text/plain", R4)
+
+R4_error = transpose(R) .- R4
+d_predict_error_mean = norm(R4[5:8, 1], 1) / 4
+mean_per_user = 0
+for i in 2:5
+    mean_per_user += norm(R4[:, i], 1) / 8
+end
+mean_per_user/= 5
+mean_per_user
+# Dimir is user 1
