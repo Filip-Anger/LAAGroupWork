@@ -1,9 +1,16 @@
 A)
-First we selected 8 films from various generas which we have all watched. We picked one person to predict - Demir, the rest of the group are the other "raters". The goal is to predict Demir's ratings of films 5 to 8, while only using Demir's ratings on films 1 to 4. 
+First we selected 8 films from various generas which we have all (5) watched. We picked one person to predict - Demir, the rest of the group are the other "raters". The goal is to predict Demir's ratings of films 5 to 8, while only using Demir's ratings on films 1 to 4. 
 
 B)
 Step 1: Prepare matrix for prediction based on angles.
 The goal is to compare 4 dimensional Demir's vector with 4 dimensional vectors (of films 1 to 4) of others. Original scale was 0 to 10, to make the vectorst most informative, we centere each vector around the origin (sum of every vector is 0). 
+
+C) 
+To determine the most extreme taste, we have decited to use the one norm of the original vectors, this is very handy because it suffices to find the vector whose size has the biggest from the mean size. 
+Results:Filip's norm is 15% bigger than the mean - possible explanation: Filip really likes films or selected his favorite films to be rated.
+	Sumana's norm is 11% smaller than the mean - possible explanation: Sumana does not like films that much or these were not her favorite.
+
+(expressed in % to provide a larger picture)
 
 D) 
 We want to determine how simular is Demir to others based on the angle. We compare the angle between Demir's vector and vectors of the other raters (individually). We normalize the sum of angles between Demir and every other rater. Now the normalized vectors (call them weights) tell us how simular is Demir's taste to taste of every other rater - we calculate Demir's predicting rating of each film by multiplying each row (coresponding to one film) by the weights. Eg: Film 1 = 0.2*V1 + 0.4*V2 + 0.1*V3 + 0.3*V4.
@@ -22,3 +29,22 @@ Original:9   Predicted: 9	Mean absolute error = 0.5
 	 8		8		
 	 8		8
 	 9		7
+	 
+	 
+E)
+1. The goal is to calculate the SVD of matrix consisting from all the 5 vectors. To do this we fill zero values for Dimir's vector rows 5 to 8.
+2. Truncate this SVD to rank 4 - this should describe the 8x5 matrix, while only being 4x5
+
+
+
+
+
+
+Idea:
+We can very well predict user's rating when we have U and V (R = U Simgma V) by taking the dot product of the corresponding user row and film row. We can obtain U and V by doing singular value decomposition.
+Problem:
+We can not do SVD on a matrix with missing entries!
+
+Solution 1 (trivial): Fill in the values with reasonable 'null values', such as mean of the known ratings.
+
+Solution 2 (advanced): We can estimate the vales more accuretly using techniques such as: Stochastic Gradient Descent (sgd) 

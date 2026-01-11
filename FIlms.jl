@@ -58,46 +58,81 @@ mean_abs_error_test = norm(demir_actual_second .- demir_predicited_second, 1) / 
 
 # TSVD
 # PLAN: 
-ratings_matrix = [  -1.25   9	7	8	10;
-                    -0.25	8	8	8	9;
-                    1.75	7	7	7	10;
-                    -0.25	6	5	6	10;
-                    0	    9	10	10	9;
-                    0	    6	9	9	9;
-                    0       6	9	7	10;
-                    0       6	6	8	8;  ]
+# ratings_matrix = [  9	7	8	10;
+#                     8	8	8	9;
+#                     7	7	7	10;
+#                     6	5	6	10;
+#                     9	10	10	9;
+#                     6	9	9	9;
+#                     6	9	7	10;
+#                     6	6	8	8;  ]
 
-ones(5, 8)
+# dimir_half = transpose([7.0 8 10 8])
 
-# normalize ratings around 0 DONE
+# # normalize ratings around 0 DONE
 
-ratings_matrix[:, 2:5] .-= ones(1, 8) * ratings_matrix[:,2:5] / 8
-ratings_matrix
-change = 7 - ratings_matrix[1,1]
+# ratings_matrix = ratings_matrix .- ones(1, 8) * ratings_matrix / 8
+# dimir_half = dimir_half - (transpose(ones(4)) *dimir_half / 4) .* ones(4)
 
-ratings_matrix *= 5
-show(stdout, "text/plain", ratings_matrix)
 
-B = transpose(ratings_matrix) * ratings_matrix
-values, Vmatrix = eigen(B, sortby=-)
-values = values[1:4]
-Vmatrix = Vmatrix[:, 1:4]
-singular = sqrt.(values)
-sigmaM = Matrix(I, 4, 4) .* singular
+# B = transpose(ratings_matrix) * ratings_matrix
+# values, Vmatrix = eigen(B, sortby=-)
+# # values = values[1:4]
+# # Vmatrix = Vmatrix[:, 1:4]
+# singular = sqrt.(values)
+# sigmaM = Matrix(I, 4, 4) .* singular
 
-Umatrix = zeros(8, 4)
-for i in 1:4
-    Umatrix[:,i] = 1/singular[i] * ratings_matrix * Vmatrix[:,i]
+# Umatrix = zeros(8,4)
+# for i in 1:4
+#     Umatrix[:,i] = 1/singular[i] * (ratings_matrix * (Vmatrix)[:,i])
+# end
+
+# # LEASET SQUARRES FROM SVD
+# Vmatrix * inv(sigmaM) * transpose(Umatrix)
+# dimir_prediction = Vmatrix * inv(sigmaM) * transpose(Umatrix) * dimir_half
+
+# latent_vectors = zeros(4, 4)
+# for i in 1:4
+#     latent_vectors[:, i] = sigmaM * Umatrix[i, :]
+# end
+# latent_vectors
+# predicted_rank_4 = Umatrix * sigmaM * transpose(Vmatrix)
+# show(stdout, "text/plain", predicted_rank_4)
+# println()
+
+# dimir_predicted = predicted_rank_4[:, 1] .+ change * ones(8)
+# display(dimir_predicted)
+# #u = 1/σ Av
+
+# # Make SVD
+
+# # Do truncated TSVD with k = 4
+
+
+
+# E)
+R = [   7.0	9	7	8	10;
+        8	8	8	8	9;
+        10	7	7	7	10;
+        8	6	5	6	10;
+        -1	9	10	10	9;
+        -1	6	9	9	9;
+        -1	6	9	7	10;
+        -1	6	6	8	8;  ]
+# Dimir full vector
+d = [7 8 10 8 9 8 8 9]
+av = sum(d[1:4]) / 4
+# R_origin = R .- (transpose(ones(8)) * R) / 8
+R[5:8, 1] = ones(4) * av
+R
+# R_origin
+# Rows - films
+# Column - users
+U, S, V = svd(R)
+# U 8x5 > FILMS
+# S 5 sig values
+# V 5x5 > USERS, demir is V[:, 1]
+
+for i in 1:8
+    println(dot(U[i,:], transpose(V[1, :])) * S[1])
 end
-transpose(Vmatrix)
-predicted_rank_4 = Umatrix * sigmaM * transpose(Vmatrix)
-show(stdout, "text/plain", predicted_rank_4)
-println()
-
-dimir_predicted = predicted_rank_4[:, 1] .+ change * ones(8)
-display(dimir_predicted)
-#u = 1/σ Av
-
-# Make SVD
-
-# Do truncated TSVD with k = 4
