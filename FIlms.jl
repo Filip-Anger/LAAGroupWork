@@ -43,70 +43,22 @@ end
 
 # Angle of Sumana and other of us - acos(0) = 1
 # Normalize, sum = 1
-weights = angles ./ sum(angles)
+weights = angles ./ norm((angles),1 )
 
 
 demir_actual_first = ratings_matrix[1:4,1]
-demir_predicited_first = Int.(round.(ratings_matrix[1:4, 2:5] * weights, digits = 0))
+av = norm(demir_actual_first, 1) /4
+demir_predicited_first = (round.(ratings_matrix[1:4, 2:5] * weights, digits = 2))
+demir_predicited_first
 mean_abs_error_training = norm(demir_actual_first .- demir_predicited_first, 1) / 4
 
 demir_actual_second = ratings_matrix[5:8,1]
-demir_predicited_second = Int.(round.(ratings_matrix[5:8, 2:5] * weights))
+demir_actual_second
+demir_predicited_second = (round.(ratings_matrix[5:8, 2:5] * weights, digits = 2))
+demir_predicited_second
 mean_abs_error_test = norm(demir_actual_second .- demir_predicited_second, 1) / 4
 
 
-
-# TSVD
-# PLAN: 
-# ratings_matrix = [  9	7	8	10;
-#                     8	8	8	9;
-#                     7	7	7	10;
-#                     6	5	6	10;
-#                     9	10	10	9;
-#                     6	9	9	9;
-#                     6	9	7	10;
-#                     6	6	8	8;  ]
-
-# dimir_half = transpose([7.0 8 10 8])
-
-# # normalize ratings around 0 DONE
-
-# ratings_matrix = ratings_matrix .- ones(1, 8) * ratings_matrix / 8
-# dimir_half = dimir_half - (transpose(ones(4)) *dimir_half / 4) .* ones(4)
-
-
-# B = transpose(ratings_matrix) * ratings_matrix
-# values, Vmatrix = eigen(B, sortby=-)
-# # values = values[1:4]
-# # Vmatrix = Vmatrix[:, 1:4]
-# singular = sqrt.(values)
-# sigmaM = Matrix(I, 4, 4) .* singular
-
-# Umatrix = zeros(8,4)
-# for i in 1:4
-#     Umatrix[:,i] = 1/singular[i] * (ratings_matrix * (Vmatrix)[:,i])
-# end
-
-# # LEASET SQUARRES FROM SVD
-# Vmatrix * inv(sigmaM) * transpose(Umatrix)
-# dimir_prediction = Vmatrix * inv(sigmaM) * transpose(Umatrix) * dimir_half
-
-# latent_vectors = zeros(4, 4)
-# for i in 1:4
-#     latent_vectors[:, i] = sigmaM * Umatrix[i, :]
-# end
-# latent_vectors
-# predicted_rank_4 = Umatrix * sigmaM * transpose(Vmatrix)
-# show(stdout, "text/plain", predicted_rank_4)
-# println()
-
-# dimir_predicted = predicted_rank_4[:, 1] .+ change * ones(8)
-# display(dimir_predicted)
-# #u = 1/σ Av
-
-# # Make SVD
-
-# # Do truncated TSVD with k = 4
 
 
 
